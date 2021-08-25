@@ -1,0 +1,39 @@
+.searchPage{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+}
+
+.searchPage h1{
+    color: rgba(17,17,60,1);
+    font-family: 'Big Shoulders Stencil Text', cursive;;
+    font-size: 8rem;
+    margin: 2rem auto;
+}
+
+form{
+    align-items: center;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 0 .5rem 2px #7575f5;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10%;
+    padding: 1.25rem;
+    width: 50%;
+}
+
+input{
+    all: unset;
+    font-size: 25px;
+    height: 2rem;
+    width: 85%;
+}
+
+button{
+    all: unset;
+    height: 2rem;
+    width: 5%;
+}

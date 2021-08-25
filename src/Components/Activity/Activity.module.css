@@ -1,0 +1,13 @@
+.activityList {
+    align-items: center;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.activityItem{
+    border-radius: 15px;
+    box-shadow: 0 0 .5rem 2px #888888;
+    font-size: 18px;
+    margin: .5rem;
+    padding: 1.5rem;
+}
