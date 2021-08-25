@@ -60,7 +60,7 @@ const User = () => {
                     <h1 className={styles.profileName}>{profile.username}</h1>
                     <a
                         className={styles.link}
-                        href={'/'}
+                        href={profile.githubUrl}
                         target='_blank'
                         rel='noopener noreferrer'>Github Profile Link</a>
                 </div>

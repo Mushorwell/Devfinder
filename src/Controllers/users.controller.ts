@@ -1,5 +1,9 @@
 import urlParams from '../Interfaces/IUrlParameters';
 import { githubAPIBaseUrl, getApiUrl, makeAPICall } from "../api/apiMethods";
+import IUser from "../Interfaces/IUser";
+import {routes} from "../Components/Layout/Body/Body";
+import {SAVE as storeUserList} from "../store/userListReducer";
+import {useDispatch} from "react-redux";
 
 // function to search for users from github, takes a string parameter
 export const searchUsers = (searchValue: string) => {
@@ -8,7 +12,7 @@ export const searchUsers = (searchValue: string) => {
     const urlParameters: urlParams = {
         destinationUrl: githubAPIBaseUrl,
         action: '/search/users?q=',
-        queryString: searchValue
+        queryString: encodeURIComponent(`${searchValue} in:name`)
     }
     const apiURL = getApiUrl(urlParameters);
 
@@ -23,4 +27,3 @@ export const searchUsers = (searchValue: string) => {
 
     return makeAPICall(apiURL, searchParameters);
 };
-

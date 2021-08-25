@@ -1,3 +1,28 @@
+# DEVFINDER FRONTEND APP
+
+## Functionality
+
+Inspired by the simplicity of search engines like Google, this web app allows the users to search for devs across the Github platform. It leverages off Github API to query the developers on the platform and allows the user to view their recent activities. 
+
+This is a very basic implementation that can be expanded on to not only query by user name but by other parameters as well as commit messages.  Another possible functionality that could be added to it is the ability to filter the users' different activities by various categories. 
+
+Futhermore, there are placeholder functions in place that can be implemented with a backend to allow the user to bookmark profiles and access them offline. For this purpose, I structured the project in such a way that it could be scalable by separating concerns in my components as much as possible. 
+
+## What can be improved on
+
+The project can be further refactored with the use of custom hooks. Also the styling of the project can be refactored and will need to be worked on to be more responsive for mobile devices. There are some minor bugs with some functionality on the result list page which give rise to areas of improvement. The project can also be enhanced to gather more details from the GitHub api and finally controls need to be added to the user activities. The user activities need to be more intractable with. 
+
+###Screenshots: 
+
+![Alt text](./public/LandingPage.png?raw=false "Landing Page inspired by modern search engine interfaces.")
+
+![Alt text](./public/SearchResultsList.png?raw=false "Search results page with filtering functionality.")
+
+![Alt text](./public/UserActivities.png?raw=false "User Profile Page")
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

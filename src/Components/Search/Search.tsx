@@ -42,6 +42,7 @@ const Search: FunctionComponent<SearchProps> = ({ searchVal, setSearchVal }: Sea
             // set the state tp searcj va;lue
             setSearchVal(searchString.value);
 
+
             // Check the number of search results
             switch (users.total_count){
                 case 0:
