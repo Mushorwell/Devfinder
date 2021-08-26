@@ -23,7 +23,6 @@ const ResultItem: FunctionComponent<ResultItemProps> = (
     const handleClick: MouseEventHandler<HTMLButtonElement> = (
         viewActivities: MouseEvent<HTMLButtonElement>
     ) => {
-        console.log(props);
         history.push(`/users/${props.profileId}`);
     }
 

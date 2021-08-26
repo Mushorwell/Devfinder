@@ -13,7 +13,6 @@ export default function ActivityListReducer (
 ): Array<IActivity> | [] {
     switch (action.type){
         case SAVE:
-            console.log('user activities found:', action.payload);
             return action.payload;
         default:
             return state;

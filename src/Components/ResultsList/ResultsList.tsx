@@ -73,7 +73,8 @@ const ResultsList: FunctionComponent<ResultProps> = (
                     break;
                 }
         });
-    }, [dispatch, searchVal]);
+        console.log(searchBar.current);
+    }, [dispatch, history, searchVal]);
 
     useEffect(() => {
 

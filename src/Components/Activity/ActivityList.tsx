@@ -8,7 +8,6 @@ const ActivityList = () => {
 
     const activities: Array<IActivity> =useSelector(
         (state: AppState) => state.activities);
-    console.log(activities);
 
     return(
         <Fragment>
