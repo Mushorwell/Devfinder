@@ -10,9 +10,9 @@ import { useHistory } from "react-router-dom";
 
 interface ResultItemProps{
     profileId:number
-    useravatar: string,
-    username: string,
-    gitHubUrl: string,
+    userAvatar: string;
+    username: string;
+    gitHubUrl: string;
 }
 const ResultItem: FunctionComponent<ResultItemProps> = (
     props: PropsWithChildren<ResultItemProps>
@@ -23,14 +23,14 @@ const ResultItem: FunctionComponent<ResultItemProps> = (
     const handleClick: MouseEventHandler<HTMLButtonElement> = (
         viewActivities: MouseEvent<HTMLButtonElement>
     ) => {
-        console.log(props.profileId);
+        console.log(props);
         history.push(`/users/${props.profileId}`);
     }
 
     return(
         <Fragment>
             <div className={styles.resultItem}>
-                <img src={props.useravatar} alt={props.username}/>
+                <img src={props.userAvatar} alt={props.username}/>
                 <div className={styles.userDetails}>
                     <h1>Username: {props.username}</h1>
                     <a

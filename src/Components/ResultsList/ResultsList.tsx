@@ -32,7 +32,7 @@ const ResultsList: FunctionComponent<ResultProps> = (
     const history = useHistory();
 
     let users =useSelector((state: AppState) => state.userList);
-    const inputElement= useRef<HTMLInputElement>(null);
+    const searchBar= useRef<HTMLInputElement>(null);
 
     // set the state for filtered users
     const [filteredUsers, setFilteredUsers] = useState<Array<IUser>>(users);
@@ -76,6 +76,11 @@ const ResultsList: FunctionComponent<ResultProps> = (
     }, [dispatch, searchVal]);
 
     useEffect(() => {
+
+        if (searchBar.current) {
+            searchBar.current.focus();
+        }
+
         console.log('state updated');
     }, [searchVal, filteredUsers, submitSearchQuery]);
 
@@ -117,7 +122,7 @@ const ResultsList: FunctionComponent<ResultProps> = (
                         id='searchString'
                         name='searchString'
                         type='text'
-                        ref={inputElement}
+                        ref={searchBar}
                         value={searchVal}
                         onChange={handleInputChange}
                     />
@@ -130,10 +135,10 @@ const ResultsList: FunctionComponent<ResultProps> = (
                         filteredUsers.map((user: IUser, index: number) =>
                             <ResultItem
                                 key={index}
-                                profileId={index}
+                                profileId={user.id}
                                 username={user.username}
                                 gitHubUrl={user.githubUrl}
-                                useravatar={user.avatarUrl || ''}
+                                userAvatar={user.avatarUrl || ''}
                             />
                         )
                         : 'Not found'}

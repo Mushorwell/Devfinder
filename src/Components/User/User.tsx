@@ -15,7 +15,11 @@ const User = () => {
 
     const { id }: { id: string } = useParams();
 
-    const user: IUser =useSelector((state: AppState) => state.userList[Number(id)]);
+    const user: IUser =useSelector((
+        state: AppState
+    ) => state.userList.find(
+        user => user.id === Number(id)
+    ));
 
     const [profile] = useState<IUser>(user);
 
@@ -51,7 +55,6 @@ const User = () => {
             }
         });
     });
-
     return(
         <Fragment>
             <div className={[styles.profileDetails].join(' ')}>

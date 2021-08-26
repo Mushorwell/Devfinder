@@ -1,0 +1,32 @@
+.notFoundPage{
+    display: flex;
+    justify-content: space-around;
+    padding: 4rem 0 10rem;
+}
+
+.infoSection{
+    align-items: center;
+    display: flex;
+    border-radius: 15px;
+    box-shadow: 0 0 .5rem 2px #888888;
+    flex-direction: column;
+    justify-content: center;
+    margin: 5% auto;
+    padding: 1rem;
+    width: 50%;
+}
+
+.notFoundImage{
+    width: 80%;
+    height: auto;
+}
+
+.navigationButton{
+    background: rgba(17,17,60,1);
+    box-shadow: 0 0 1px 2px #888888;
+    color: white;
+    border-radius: 5px;
+    margin-top: 15px;
+    padding: .8rem;
+    width: auto;
+}

@@ -15,6 +15,8 @@ const ActivityList = () => {
             {activities.length!==0 ?
             activities.map(
                 (activity: IActivity, index: number) => <ActivityListItem
+                    key={index}
+                    activityId={activity.id}
                     activityType={activity.type}
                     repoName={activity.repo}
                     isPublic={activity.isPublic}
