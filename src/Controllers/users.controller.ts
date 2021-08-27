@@ -25,6 +25,7 @@ export const searchUsers = (searchValue: string, page: number = 1) => {
     return makeAPICall(apiURL, searchParameters).then(
         users => {
             // Check the number of search results
+            // if (users.t)
             if (users.total_count<10){
                 return {
                     totalPages: 1,
@@ -41,7 +42,7 @@ export const searchUsers = (searchValue: string, page: number = 1) => {
 };
 
 const extractResponse = (array: Array<any>):Array<IUser> => {
-    return array.map(function (user: any) {
+    if (array.length!==0) return array.map(function (user: any) {
         return {
             id: user.id,
             username: user.login,
@@ -51,4 +52,5 @@ const extractResponse = (array: Array<any>):Array<IUser> => {
             reposUrl: user.repos_url,
         };
     });
+    return [];
 }

@@ -38,6 +38,7 @@ const Search: FunctionComponent<SearchProps> = ({ searchVal, setSearchVal }: Sea
 
         await searchUsers(searchString.value).then(
             result => {
+
                 dispatch({
                     type:storeUserList,
                     payload: result.loadedUsers

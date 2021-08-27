@@ -72,7 +72,6 @@ const ResultsList: FunctionComponent<ResultProps> = (
         console.log(searchVal);
 
         searchUsers(searchVal, 5).then(searchResults => {
-
             // store the results
             dispatch({
                 type:storeUserList,
