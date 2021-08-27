@@ -1,16 +1,16 @@
 import React, {Fragment, useState, useEffect, useRef} from 'react';
-import styles from './User.module.css';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import {AppState} from "../../store/appState";
 import IUser from "../../Interfaces/IUser";
 import { SAVE as saveUser } from "../../store/userReducer";
 import { searchRecentActivities } from '../../Controllers/activities.controller';
-import { routes } from "../Layout/Body/Body";
 import IActivity from "../../Interfaces/IActivity";
-import ActivityList from "../Activity/ActivityList";
 import { SAVE as storeUserActivities } from '../../store/activityListReducer';
 import NotFoundComponent from "../Layout/NotFound/NotFoundComponent";
+import UserHeader from "./UserHeader";
+import styles from "./User.module.css";
+import ActivityList from "../Activity/ActivityList";
 
 const User = () => {
 
@@ -40,7 +40,8 @@ const User = () => {
                     case 0:
                         break;
                     default:
-                        const recentActions: Array<IActivity> = (activities.map((activity: any) => ({
+                        const recentActions: Array<IActivity> = (activities.map(
+                            (activity: any) => ({
                                 id: activity.id,
                                 type: activity.type,
                                 repo: activity.repo.name,
@@ -60,22 +61,13 @@ const User = () => {
     });
     return(
         <Fragment>
-            {user ?
+            {profile ?
                 <Fragment>
-                    <div className={[styles.profileDetails].join(' ')}>
-                        <img className={styles.profileImage} src={profile? profile.avatarUrl : ''} alt={profile? profile.username : ''}/>
-                        <div className={styles.userDetails}>
-                            <h1 className={styles.profileName}>{profile ? profile.username : ''}</h1>
-                            <a
-                                className={styles.link}
-                                href={profile? profile.githubUrl : ''}
-                                target='_blank'
-                                rel='noopener noreferrer'>Github Profile Link</a>
-                        </div>
-                        <button
-                            className={styles.actionButton}
-                        >{`Save ${profile ? profile.username : ''}'s details`}</button>
-                    </div>
+                    <UserHeader
+                        avatarUrl={profile.avatarUrl}
+                        githubUrl={profile.githubUrl}
+                        username={profile.username}
+                    />
                     <div className={styles.activities}>
                         <ActivityList/>
                     </div>

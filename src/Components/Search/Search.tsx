@@ -6,7 +6,6 @@ import { searchUsers } from "../../Controllers/users.controller";
 import { routes } from "../Layout/Body/Body";
 import { useDispatch } from "react-redux";
 import { SAVE as storeUserList } from '../../store/userListReducer';
-import IUser from "../../Interfaces/IUser";
 
 interface SearchProps{
     searchVal?: string;
@@ -27,7 +26,7 @@ const Search: FunctionComponent<SearchProps> = ({ searchVal, setSearchVal }: Sea
         }
     }, []);
 
-    const submitSearchQuery: FormEventHandler<HTMLFormElement> = (
+    const submitSearchQuery: FormEventHandler<HTMLFormElement> = async (
         event: FormEvent<HTMLFormElement>
     ) => {
         event.preventDefault();
@@ -37,47 +36,23 @@ const Search: FunctionComponent<SearchProps> = ({ searchVal, setSearchVal }: Sea
             searchString: { value: string}
         };
 
-        searchUsers(searchString.value).then(users => {
-
-            // set the state tp searcj va;lue
-            setSearchVal(searchString.value);
-
-
-            // Check the number of search results
-            switch (users.total_count){
-                case 0:
-                    history.push(routes.Home);
-                    break;
-                default:
-                    const usersFound: Array<IUser> = users.items.map(function(user: any){
-                        return {
-                            id: user.id,
-                            username: user.login,
-                            avatarUrl: user.avatar_url,
-                            githubUrl: user.html_url,
-                            eventsUrl: user.events_url,
-                            reposUrl: user.repos_url,
-                            textMatches: {
-                                type: user.text_matches.property,
-                                fragment: user.text_matches.fragment
-                            },
-                        };
-                    });
-                    dispatch({
-                        type:storeUserList,
-                        payload: usersFound
-                    });
-                    history.push(routes.ResultsList);
-                    break;
+        await searchUsers(searchString.value).then(
+            result => {
+                dispatch({
+                    type:storeUserList,
+                    payload: result.loadedUsers
+                });
+                setSearchVal(searchString.value);
+                history.push(routes.ResultsList);
             }
-        });
+        );
     }
 
     return(
         <Fragment>
             <div className={styles.searchPage}>
                 <h1>DEVFINDER</h1>
-                <form onSubmit={submitSearchQuery}>
+                <form onSubmit={async(submit: FormEvent<HTMLFormElement>) => await submitSearchQuery(submit)}>
                     <input id='searchString' name='searchString' type='text' ref={inputElement}/>
                     <button type='submit'><MdSearch size={'30px'}/></button>
                 </form>

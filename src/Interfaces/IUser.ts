@@ -5,10 +5,10 @@ export default interface IUser {
     githubUrl: string;
     eventsUrl?: string;
     reposUrl: string;
-    textMatches: Array<IMatch>;
+    // textMatches: Array<IMatch>;
 }
 
 export interface IMatch{
-    type: string; // the type of value which matched the search string
-    fragment: string; // the part of the value matching the string
+    type?: string; // the type of value which matched the search string
+    fragment?: string; // the part of the value matching the string
 }

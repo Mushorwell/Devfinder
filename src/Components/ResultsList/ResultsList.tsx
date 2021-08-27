@@ -14,10 +14,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store/appState";
 import IUser from "../../Interfaces/IUser";
 import ResultItem from "./ResultItem";
-import {searchUsers} from "../../Controllers/users.controller";
-import {routes} from "../Layout/Body/Body";
+import { searchUsers } from "../../Controllers/users.controller";
 import {SAVE as storeUserList} from "../../store/userListReducer";
-import { useHistory } from 'react-router-dom';
 
 interface ResultProps{
     searchVal: string;
@@ -29,7 +27,6 @@ const ResultsList: FunctionComponent<ResultProps> = (
 ) => {
 
     const dispatch = useDispatch();
-    const history = useHistory();
 
     let users =useSelector((state: AppState) => state.userList);
     const searchBar= useRef<HTMLInputElement>(null);
@@ -37,53 +34,14 @@ const ResultsList: FunctionComponent<ResultProps> = (
     // set the state for filtered users
     const [filteredUsers, setFilteredUsers] = useState<Array<IUser>>(users);
 
-    const submitSearchQuery: FormEventHandler<HTMLFormElement> = useCallback((
-        searchValueEvent: FormEvent<HTMLFormElement>
-    ) => {
-        searchValueEvent.preventDefault();
-
-        console.log(searchVal);
-
-        searchUsers(searchVal).then(users => {
-
-            // Check the number of search results
-            switch (users.total_count){
-                case 0:
-                    break;
-                default:
-                    const usersFound: Array<IUser> = users.items.map(function(user: any){
-                        return {
-                            id: user.id,
-                            username: user.login,
-                            avatarUrl: user.avatar_url,
-                            githubUrl: user.html_url,
-                            eventsUrl: user.events_url,
-                            reposUrl: user.repos_url,
-                            textMatches: {
-                                type: user.text_matches.property,
-                                fragment: user.text_matches.fragment
-                            },
-                        };
-                    });
-                    dispatch({
-                        type:storeUserList,
-                        payload: usersFound
-                    });
-                    history.push(routes.ResultsList);
-                    break;
-                }
-        });
-        console.log(searchBar.current);
-    }, [dispatch, history, searchVal]);
-
     useEffect(() => {
-
+        console.log(searchBar.current);
         if (searchBar.current) {
             searchBar.current.focus();
         }
 
         console.log('state updated');
-    }, [searchVal, filteredUsers, submitSearchQuery]);
+    }, [searchVal, filteredUsers]);
 
     const checkIfMatches = (
         element: IUser,
@@ -93,27 +51,46 @@ const ResultsList: FunctionComponent<ResultProps> = (
             .indexOf(filterBy) !== -1;
     }
 
-    const filterList = (usersArray: Array<IUser>, filterBy: string) => {
+    const filterList = useCallback((usersArray: Array<IUser>, filterBy: string) => {
 
         // if search bar has been cleared function returns full list
         if (filterBy !== ''){
             filterBy = filterBy.toLocaleLowerCase();
-
+            console.log('Filtered list');
             return usersArray.filter((user) =>
                 checkIfMatches(user, filterBy));
         }
         console.log('cleared search value');
         return usersArray;
+    },[]);
+
+    const submitSearchQuery: FormEventHandler<HTMLFormElement> = (
+        searchValueEvent: FormEvent<HTMLFormElement>
+    ) => {
+        searchValueEvent.preventDefault();
+
+        console.log(searchVal);
+
+        searchUsers(searchVal, 5).then(searchResults => {
+
+            // store the results
+            dispatch({
+                type:storeUserList,
+                payload: searchResults.loadedUsers
+            });
+            setFilteredUsers(searchResults.loadedUsers)
+            // history.push(routes.ResultsList);
+        });
     }
 
     // Function to handle the value change of searchVal
-    const handleInputChange: ChangeEventHandler<HTMLInputElement> = (
+    const handleInputChange: ChangeEventHandler<HTMLInputElement> = useCallback((
         filterResultsEvent: ChangeEvent<HTMLInputElement>
     ) =>  {
         let newUsers: Array<IUser> = [...users];
         setSearchVal(filterResultsEvent.target.value);
-        setFilteredUsers(filterList(newUsers, searchVal));
-    }
+        setFilteredUsers(filterList(newUsers, filterResultsEvent.target.value));
+    }, [filterList, setSearchVal, users])
 
     return(
         <Fragment>

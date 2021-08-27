@@ -16,7 +16,20 @@ a{
 .containerDiv{
     display: flex;
     justify-content: space-around;
+    flex-direction: column;
     padding: 4rem 0 10rem;
+}
+
+.infoSection{
+    align-items: center;
+    display: flex;
+    border-radius: 15px;
+    box-shadow: 0 0 .5rem 2px #888888;
+    flex-direction: column;
+    justify-content: center;
+    margin: 5% auto;
+    padding: 1rem;
+    width: 50%;
 }
 
 .navigationButton{

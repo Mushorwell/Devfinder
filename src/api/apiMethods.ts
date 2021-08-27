@@ -19,5 +19,3 @@ export const getApiUrl = ({destinationUrl, action, queryString}: IUrlParams): st
     // console.log(searchVal);
     return destinationUrl + action + searchVal;
 }
-
-export {}

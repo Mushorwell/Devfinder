@@ -1,18 +1,15 @@
 import urlParams from '../Interfaces/IUrlParameters';
-import { githubAPIBaseUrl, getApiUrl, makeAPICall } from "../api/apiMethods";
+import {getApiUrl, githubAPIBaseUrl, makeAPICall} from "../api/apiMethods";
 import IUser from "../Interfaces/IUser";
-import {routes} from "../Components/Layout/Body/Body";
-import {SAVE as storeUserList} from "../store/userListReducer";
-import {useDispatch} from "react-redux";
 
 // function to search for users from github, takes a string parameter
-export const searchUsers = (searchValue: string) => {
+export const searchUsers = (searchValue: string, page: number = 1) => {
 
     // Assemble the url for fetch request
     const urlParameters: urlParams = {
         destinationUrl: githubAPIBaseUrl,
         action: '/search/users?q=',
-        queryString: encodeURIComponent(`${searchValue} in:name`)
+        queryString: `${searchValue}`+encodeURIComponent(' in:name')+'&per_page=10&page=1&sort=name&order=asc',
     }
     const apiURL = getApiUrl(urlParameters);
 
@@ -25,5 +22,33 @@ export const searchUsers = (searchValue: string) => {
         }
     }
 
-    return makeAPICall(apiURL, searchParameters);
+    return makeAPICall(apiURL, searchParameters).then(
+        users => {
+            // Check the number of search results
+            if (users.total_count<10){
+                return {
+                    totalPages: 1,
+                    loadedUsers: extractResponse(users.items)
+                };
+            } else {
+                return {
+                    totalPages: Math.ceil(users.total_count/10),
+                    loadedUsers: extractResponse(users.items)
+                };
+            }
+        }
+    );
 };
+
+const extractResponse = (array: Array<any>):Array<IUser> => {
+    return array.map(function (user: any) {
+        return {
+            id: user.id,
+            username: user.login,
+            avatarUrl: user.avatar_url,
+            githubUrl: user.html_url,
+            eventsUrl: user.events_url,
+            reposUrl: user.repos_url,
+        };
+    });
+}

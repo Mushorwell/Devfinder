@@ -2,8 +2,8 @@ import React, {Fragment} from 'react';
 import {useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../../store/appState";
-import IActivity from "../../Interfaces/IActivity";
 import NotFound from "../Layout/NotFound/NotFoundComponent";
+import UserHeader from "../User/UserHeader";
 
 const ActivityView = () => {
 
@@ -15,23 +15,29 @@ const ActivityView = () => {
         activity => activity.id === id
     ));
 
-    if (activity){
-        const repoUrl = `https://github.com/${activity.repo}`
+    const user =useSelector((
+        state: AppState
+    ) => state.user);
+
+    if (activity && user){
+        const repoUrl = `https://github.com/${activity.repo}`;
+
+        const date = new Date(activity.date);
 
         return(
             <Fragment>
-                <div className='containerDiv'>
-                    <br/><br/>
-                    These are the activity details:<br/>
-                    <br/>
-                    Timestamp: {activity.date}
-                    <br/>
-                    Activity Type: {activity.type}
-                    <br/>
-                    Activity Repo: {activity.repo}
-                    <br/>
-                    Repository: {activity.isPublic ? 'Public Repository': 'Private Repository'}
-                    <br/>
+                <UserHeader
+                    githubUrl={user.githubUrl}
+                    username={user.username}
+                    avatarUrl={user.avatarUrl}
+                />
+                <div className='infoSection'>
+                    <p>Activity Type: {activity.type}</p>
+                    <p>Activity Repo: {activity.repo}</p>
+                    <p>Repository: {activity.isPublic ?
+                        'Public Repository'
+                        : 'Private Repository'}</p>
+                    <p>Timestamp: {date.toUTCString()}</p>
                     <a
                         className='navigationButton'
                         href={repoUrl}

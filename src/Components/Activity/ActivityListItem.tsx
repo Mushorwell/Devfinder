@@ -24,13 +24,17 @@ const ActivityListItem: FunctionComponent<ActivityListProps> = (
         history.push(getExactRoute(routes.ActivityTemplate, activityId));
     }
 
+    const date = new Date(timeStamp);
+
     return(
         <Fragment>
             <div className={styles.activityItem}>
                 <h1>Event Type: {activityType}</h1>
                 <p>Repo name: {repoName}</p>
-                <p>Public: {isPublic}</p>
-                <p>Timestamp: {timeStamp}</p>
+                <p>Public: {isPublic ?
+                    'Public Repository'
+                    : 'Private Repository'}</p>
+                <p>Timestamp: {date.toUTCString()}</p>
                 <button className='navigationButton' onClick={handleClick}>
                     View Activity Details
                 </button>

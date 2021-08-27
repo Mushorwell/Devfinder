@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
-import {Switch, Route, useParams} from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import '../../../App.css';
 import Search from "../../Search/Search";
 import ResultsList from "../../ResultsList/ResultsList";
 import User from "../../User/User";
 import ActivityView from "../../Activity/ActivityView";
 import NotFound from "../NotFound/NotFound";
-import { useSelector } from "react-redux";
 
 // strongly type object for routes
 interface routePaths {
