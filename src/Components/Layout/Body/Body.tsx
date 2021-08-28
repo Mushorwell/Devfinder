@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import '../../../App.css';
 import Search from "../../Search/Search";
@@ -33,12 +33,7 @@ export const routes: routePaths = {
     NonExistingPage: '/*',
 }
 
-// const { id }: { id: string } = useParams();
-
 function Body() {
-
-    // State fpr tje search value
-    const [searchName, setSearchName] = useState<string>('');
 
     return (
         <React.Fragment>
@@ -50,10 +45,10 @@ function Body() {
                     <User/>
                 </Route>
                 <Route exact path={routes.ResultsList}>
-                    <ResultsList searchVal={searchName} setSearchVal={setSearchName} />
+                    <ResultsList />
                 </Route>
                 <Route exact path={routes.Home}>
-                    <Search searchVal={searchName} setSearchVal={setSearchName} />
+                    <Search />
                 </Route>
                 <Route exact path={routes.NonExistingPage}>
                     <NotFound />

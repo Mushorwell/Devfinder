@@ -1,18 +1,3 @@
-.searchPage{
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-}
-
-.searchPage h1{
-    color: rgba(17,17,60,1);
-    font-family: 'Big Shoulders Stencil Text', cursive;;
-    font-size: 8rem;
-    margin: 2rem auto;
-}
-
 form{
     align-items: center;
     border: none;
@@ -36,4 +21,51 @@ button{
     all: unset;
     height: 2rem;
     width: 5%;
+}
+
+.searchPage{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+}
+
+.searchPage h1{
+    color: rgba(17,17,60,1);
+    font-family: 'Big Shoulders Stencil Text', cursive;;
+    font-size: 8rem;
+    margin: 2rem auto;
+}
+
+.resultsPagination{
+    align-items: center;
+    display: flex;
+    font-size: 1.5rem;
+    justify-content: space-evenly;
+}
+
+.navigateResultsPage{
+    font-size: 1.5rem;
+    margin: 5px;
+    text-align: center;
+    padding: 10px;
+}
+
+.pagination{
+    background: #e8e2f1;
+    border-radius: 5px;
+    color: rgba(17,17,60,1);
+    margin: 3px;
+    padding: 5px;
+}
+
+.currentPage{
+    background: rgba(81,76,167,1);
+    color: #e8e2f1;
+    font-weight: 900;
+}
+
+.paginationLabel{
+    width: 5rem;
 }

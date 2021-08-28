@@ -1,16 +1,22 @@
-import IUser from "../Interfaces/IUser";
+import { IUserList } from "../Interfaces/IUser";
 
 export const SAVE = 'STORE_USERS';
 
 export interface UserListAction {
     type: string;
-    payload: Array<IUser> | [];
+    payload: IUserList;
+}
+
+const initialValue = {
+    currentPage: 1,
+    totalPages: 1,
+    loadedUsers: [],
 }
 
 export default function UserListReducer (
-    state: Array<IUser> | [] = [],
+    state: IUserList = initialValue,
     action: UserListAction
-): Array<IUser> | [] {
+): IUserList  {
     switch (action.type){
         case SAVE:
             // console.log('github users found:', action.payload);

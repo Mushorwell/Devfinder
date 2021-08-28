@@ -3,6 +3,8 @@
 }
 
 .search{
+    align-items: center;
+    display: flex;
     height: 10%;
     padding: 6rem 2rem 2rem;
     width: auto;
@@ -53,3 +55,4 @@
     margin-right: 10vw;
     text-align: right;
 }
+

@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect, useRef} from 'react';
+import React, {Fragment, useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import {AppState} from "../../store/appState";
@@ -18,7 +18,7 @@ const User = () => {
 
     const user =useSelector((
         state: AppState
-    ) => state.userList.find(
+    ) => state.userList.loadedUsers.find(
         user => user.id === Number(id)
     ));
 

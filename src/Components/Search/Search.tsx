@@ -1,4 +1,4 @@
-import React, {FormEvent, FormEventHandler, Fragment, FunctionComponent, useEffect, useRef} from 'react';
+import React, {FormEvent, FormEventHandler, Fragment, useEffect, useRef, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './Search.module.css';
 import { MdSearch } from "react-icons/md";
@@ -6,14 +6,13 @@ import { searchUsers } from "../../Controllers/users.controller";
 import { routes } from "../Layout/Body/Body";
 import { useDispatch } from "react-redux";
 import { SAVE as storeUserList } from '../../store/userListReducer';
+import { SAVE as storeSearchString } from '../../store/searchReducer';
+import LoaderPage from "../Shared/LoaderPage";
 
-interface SearchProps{
-    searchVal?: string;
-    setSearchVal:  React.Dispatch<React.SetStateAction<string>>;
-}
-const Search: FunctionComponent<SearchProps> = ({ searchVal, setSearchVal }: SearchProps) => {
+const Search = () => {
 
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState<boolean>(false);
 
     const inputElement = useRef<HTMLInputElement>(null);
 
@@ -26,6 +25,27 @@ const Search: FunctionComponent<SearchProps> = ({ searchVal, setSearchVal }: Sea
         }
     }, []);
 
+    const executeSearch = async (searchVal: string) => {
+        setLoading(true);
+        console.log('Loading...', loading);
+        await searchUsers(searchVal).then(
+            result => {
+
+                dispatch({
+                    type:storeUserList,
+                    payload: result
+                });
+                dispatch({
+                    type: storeSearchString,
+                    payload: searchVal
+                });
+                setLoading(false);
+                console.log('Loading...', loading);
+                history.push(routes.ResultsList);
+            }
+        );
+    }
+
     const submitSearchQuery: FormEventHandler<HTMLFormElement> = async (
         event: FormEvent<HTMLFormElement>
     ) => {
@@ -36,28 +56,21 @@ const Search: FunctionComponent<SearchProps> = ({ searchVal, setSearchVal }: Sea
             searchString: { value: string}
         };
 
-        await searchUsers(searchString.value).then(
-            result => {
-
-                dispatch({
-                    type:storeUserList,
-                    payload: result.loadedUsers
-                });
-                setSearchVal(searchString.value);
-                history.push(routes.ResultsList);
-            }
-        );
+        await executeSearch(searchString.value);
     }
 
     return(
         <Fragment>
-            <div className={styles.searchPage}>
-                <h1>DEVFINDER</h1>
-                <form onSubmit={async(submit: FormEvent<HTMLFormElement>) => await submitSearchQuery(submit)}>
-                    <input id='searchString' name='searchString' type='text' ref={inputElement}/>
-                    <button type='submit'><MdSearch size={'30px'}/></button>
-                </form>
-            </div>
+            {loading ?
+                <LoaderPage message='Finding GitHub Users...'/> :
+                <div className={styles.searchPage}>
+                    <h1>DEVFINDER</h1>
+                    <form onSubmit={async(submit: FormEvent<HTMLFormElement>) => await submitSearchQuery(submit)}>
+                        <input id='searchString' name='searchString' type='text' ref={inputElement}/>
+                        <button type='submit'><MdSearch size={'30px'}/></button>
+                    </form>
+                </div>
+            }
         </Fragment>
     )
 }

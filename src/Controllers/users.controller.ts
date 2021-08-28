@@ -9,7 +9,7 @@ export const searchUsers = (searchValue: string, page: number = 1) => {
     const urlParameters: urlParams = {
         destinationUrl: githubAPIBaseUrl,
         action: '/search/users?q=',
-        queryString: `${searchValue}`+encodeURIComponent(' in:name')+'&per_page=10&page=1&sort=name&order=asc',
+        queryString: `${searchValue}`+encodeURIComponent(' in:name')+`&per_page=10&page=${page}&sort=name&order=asc`,
     }
     const apiURL = getApiUrl(urlParameters);
 
@@ -28,11 +28,13 @@ export const searchUsers = (searchValue: string, page: number = 1) => {
             // if (users.t)
             if (users.total_count<10){
                 return {
+                    currentPage: page,
                     totalPages: 1,
                     loadedUsers: extractResponse(users.items)
                 };
             } else {
                 return {
+                    currentPage: page,
                     totalPages: Math.ceil(users.total_count/10),
                     loadedUsers: extractResponse(users.items)
                 };
