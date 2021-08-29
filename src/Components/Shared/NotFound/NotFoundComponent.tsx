@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import styles from './NotFound.module.css';
 import NotFoundImg from '../../../images/NotFound.jpg';
-import { routes } from "../Body/Body";
+import { routes } from "../../Layout/Body/Body";
 
 const NotFound = () => {
 

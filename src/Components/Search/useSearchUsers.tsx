@@ -1,6 +1,6 @@
 import {useHistory, useLocation} from "react-router-dom";
 import {Dispatch, SetStateAction} from "react";
-import IUser from "../../Interfaces/IUser";
+import IUser, {IUserList} from "../../Interfaces/IUser";
 import {searchUsers} from "../../Controllers/users.controller";
 import {SAVE as storeUserList} from "../../store/userListReducer";
 import {SAVE as storeSearchString} from "../../store/searchReducer";
@@ -23,23 +23,33 @@ export async function useSearchUsers({loading, searchVal, setFilteredUsers, setL
 
     console.log(location);
 
-    await searchUsers(searchVal, pageNo).then(
-        result => {
+    const sendDataToStore = (
+        userList: IUserList | undefined, searchString: string
+    ) => {
+        if (userList!==undefined){
             storeDispatch({
                 type:storeUserList,
-                payload: result
+                payload: userList
             });
             storeDispatch({
                 type: storeSearchString,
                 payload: searchVal
             });
-            setLoading(false);
-            console.log('Loading...', loading);
-            if (location.pathname===routes.Home){
-                history.push(routes.ResultsList);
-            }
-            if (location.pathname===routes.ResultsList){
-                if (setFilteredUsers) setFilteredUsers(result.loadedUsers);
+        }
+    }
+
+    await searchUsers(searchVal, pageNo).then(
+        result => {
+            if (result !== undefined){
+                sendDataToStore(result, searchVal)
+                setLoading(false);
+                console.log('Loading...', loading);
+                if (location.pathname===routes.Home){
+                    history.push(routes.ResultsList);
+                }
+                if (location.pathname===routes.ResultsList){
+                    if (setFilteredUsers) setFilteredUsers(result.loadedUsers);
+                }
             }
         }
     );

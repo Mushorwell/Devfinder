@@ -4,8 +4,12 @@ import UserListReducer from "./userListReducer";
 import ActivityListReducer from "./activityListReducer";
 import ActivityReducer from "./activityReducer";
 import SearchReducer from "./searchReducer";
+import LoadReducer from "./loadReducer";
+import FilteredUsersReducer from "./filteredUsersReducer";
 
 export const rootReducer = combineReducers({
+    loading: LoadReducer,
+    filteredUsers: FilteredUsersReducer,
     user: UserReducer,
     userList: UserListReducer,
     activities: ActivityListReducer,

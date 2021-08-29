@@ -7,7 +7,7 @@ import { routes } from "../Layout/Body/Body";
 import { useDispatch } from "react-redux";
 import { SAVE as storeUserList } from '../../store/userListReducer';
 import { SAVE as storeSearchString } from '../../store/searchReducer';
-import LoaderPage from "../Shared/LoaderPage";
+import LoaderPage from "../Shared/Loader/LoaderPage";
 
 const Search = () => {
 
@@ -26,24 +26,29 @@ const Search = () => {
     }, []);
 
     const executeSearch = async (searchVal: string) => {
-        setLoading(true);
-        console.log('Loading...', loading);
-        await searchUsers(searchVal).then(
-            result => {
-
-                dispatch({
-                    type:storeUserList,
-                    payload: result
-                });
-                dispatch({
-                    type: storeSearchString,
-                    payload: searchVal
-                });
-                setLoading(false);
-                console.log('Loading...', loading);
-                history.push(routes.ResultsList);
-            }
-        );
+        if (searchVal!==''){
+            setLoading(true);
+            console.log('Loading...', loading);
+            await searchUsers(searchVal).then(
+                result => {
+                    if (result!==undefined){
+                        dispatch({
+                            type:storeUserList,
+                            payload: result
+                        });
+                        dispatch({
+                            type: storeSearchString,
+                            payload: searchVal
+                        });
+                        setLoading(false);
+                        console.log('Loading...', loading);
+                        history.push(routes.ResultsList);
+                    } else {
+                        console.log(`Can't connect... try again later`);
+                    }
+                }
+            );
+        }
     }
 
     const submitSearchQuery: FormEventHandler<HTMLFormElement> = async (

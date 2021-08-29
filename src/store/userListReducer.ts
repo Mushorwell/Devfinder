@@ -16,7 +16,7 @@ const initialValue = {
 export default function UserListReducer (
     state: IUserList = initialValue,
     action: UserListAction
-): IUserList  {
+): IUserList {
     switch (action.type){
         case SAVE:
             // console.log('github users found:', action.payload);

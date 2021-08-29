@@ -19,6 +19,8 @@ import {SAVE as storeUserList} from "../../store/userListReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../store/appState";
 import {SAVE as storeSearchString} from "../../store/searchReducer";
+import {SAVE as storeLoadStatus} from '../../store/loadReducer';
+import {SAVE as storeFilteredUsers} from '../../store/filteredUsersReducer';
 
 interface ISearchBarProps{
     loading: boolean;
@@ -26,12 +28,11 @@ interface ISearchBarProps{
     setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-const SearchBar: FunctionComponent<ISearchBarProps> = (
-    { loading, setFilteredUsers, setLoading }: ISearchBarProps
-) => {
-
+const SearchBar= () => {
+    const filteredUsers: Array<IUser> =useSelector((state: AppState) => state.userList.loadedUsers);
     const searchVal: string = useSelector((state: AppState) => state.search);
     const usersList: IUserList = useSelector((state: AppState) => state.userList);
+    const loading: boolean = useSelector((state: AppState) => state.loading);
 
     const storeDispatch = useDispatch();
 
@@ -45,30 +46,39 @@ const SearchBar: FunctionComponent<ISearchBarProps> = (
             searchBar.current.focus();
         }
 
-        console.log('state updated');
+        console.log('Autofocus on search bar');
     }, []);
 
+    type ActionType = string;
+    type ActionPayload = IUserList | string | boolean | Array<IUser>;
+
+    const dispatchReduxAction = useCallback((type: ActionType, payload: ActionPayload) => {
+        storeDispatch({
+            type:type,
+            payload: payload
+        });
+        console.log('Updating state using action:', type);
+    }, [storeDispatch])
+
     const executeSearch = useCallback(async (searchVal: string, pageNo: number = 1) => {
-        setLoading(true);
-        console.log('Loading...', loading);
-        await searchUsers(searchVal, pageNo).then(
-            result => {
-                storeDispatch({
-                    type:storeUserList,
-                    payload: result
-                });
-                storeDispatch({
-                    type: storeSearchString,
-                    payload: searchVal
-                });
-                setLoading(false);
-                console.log('Loading...', loading);
-                setFilteredUsers(result.loadedUsers);
-            }
-
-        );
-
-    }, [loading, setFilteredUsers, setLoading, storeDispatch]);
+        if(searchVal!==''){
+            dispatchReduxAction(storeLoadStatus, true);
+            console.log('Loading...', loading);
+            await searchUsers(searchVal, pageNo).then(
+                result => {
+                    if (result !== undefined){
+                    dispatchReduxAction(storeUserList, result);
+                    dispatchReduxAction(storeSearchString, searchVal);
+                    dispatchReduxAction(storeFilteredUsers, result.loadedUsers);
+                    dispatchReduxAction(storeLoadStatus, false);
+                    console.log('Loading...', loading);
+                    }else{
+                        console.log(`Can't connect... try again later`);
+                    }
+                }
+            );
+        }
+    }, [dispatchReduxAction, filteredUsers, loading]);
 
     const submitSearchQuery: FormEventHandler<HTMLFormElement> = useCallback(
         async (searchValueEvent: FormEvent<HTMLFormElement>
@@ -109,8 +119,8 @@ const SearchBar: FunctionComponent<ISearchBarProps> = (
     ) =>  {
         let newUsers: Array<IUser> = [...usersList.loadedUsers];
         setSearchString(filterResultsEvent.target.value);
-        setFilteredUsers(filterList(newUsers, filterResultsEvent.target.value));
-    }, [filterList, setFilteredUsers, usersList.loadedUsers]);
+        dispatchReduxAction(storeFilteredUsers, filterList(newUsers, filterResultsEvent.target.value));
+    }, [dispatchReduxAction, filterList, usersList.loadedUsers]);
 
     return (
         <Fragment>

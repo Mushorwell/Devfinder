@@ -15,14 +15,12 @@ interface ISearchSection{
     setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-const SearchSection: FunctionComponent<ISearchSection> = (
-    { setFilteredUsers, loading, setLoading }: ISearchSection
-) => {
+const SearchSection = () => {
     return (
         <Fragment>
             <div className={styles.search}>
-                <SearchBar loading={loading} setFilteredUsers={setFilteredUsers} setLoading={setLoading} />
-                <SearchNav setFilteredUsers={setFilteredUsers} setLoading={setLoading} />
+                <SearchBar />
+                <SearchNav />
             </div>
         </Fragment>
     );

@@ -15,6 +15,8 @@ import {searchUsers} from "../../Controllers/users.controller";
 import {SAVE as storeUserList} from "../../store/userListReducer";
 import {SAVE as storeSearchString} from "../../store/searchReducer";
 import IUser from "../../Interfaces/IUser";
+import { SAVE as storeFilteredUsers } from '../../store/filteredUsersReducer';
+import { SAVE as storeLoadStatus } from '../../store/loadReducer';
 
 interface IActions{
     ADD: string;
@@ -34,20 +36,12 @@ const actions: IActions ={
     SUB: 'subtract'
 }
 
-const initialState = {
-    secondPreviousPage: -1,
-    previousPage: 0,
-    currentPage: 1,
-    nextPage: 2,
-    secondNextPage: 3
-}
-
 interface ISearchNav{
     setFilteredUsers: Dispatch<SetStateAction<IUser[]>>;
     setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoading }: ISearchNav ) => {
+const SearchNav = () => {
 
     const increment = (maximum: number, state: IPaginationsState) => {
         if (state.currentPage+1 <= maximum){
@@ -87,8 +81,19 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
     }
 
     const storeDispatch = useDispatch();
+
     const searchVal: string = useSelector((state: AppState) => state.search);
     const totalPages: number = useSelector((state: AppState) => state.userList.totalPages);
+    const activePage: number = useSelector((state: AppState) => state.userList.currentPage);
+
+    const initialState = {
+        secondPreviousPage: activePage-2,
+        previousPage: activePage-1,
+        currentPage: activePage,
+        nextPage: activePage+1,
+        secondNextPage: activePage+2
+    }
+
     const [{
         secondPreviousPage,
         previousPage,
@@ -98,22 +103,33 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
     }, dispatch] = useReducer( reducer, initialState);
 
     const executeSearch = useCallback(async (searchVal: string, pageNo: number = 1) => {
-        setLoading(true);
+        storeDispatch({
+            type: storeLoadStatus,
+            payload: true
+        });
         await searchUsers(searchVal, pageNo).then(
             result => {
-                storeDispatch({
-                    type:storeUserList,
-                    payload: result
-                });
-                storeDispatch({
-                    type: storeSearchString,
-                    payload: searchVal
-                });
-                setFilteredUsers(result.loadedUsers);
+                if (result !== undefined){
+                    storeDispatch({
+                        type:storeUserList,
+                        payload: result
+                    });
+                    storeDispatch({
+                        type: storeSearchString,
+                        payload: searchVal
+                    });
+                    storeDispatch({
+                        type: storeFilteredUsers,
+                        payload: result.loadedUsers
+                    });
+                }
             }
         );
-        setLoading(false);
-    }, [setFilteredUsers, setLoading, storeDispatch]);
+        storeDispatch({
+            type: storeLoadStatus,
+            payload: false
+        });
+    }, [storeDispatch]);
 
     const handlePreviousPage: MouseEventHandler<HTMLButtonElement> = async (
         goToPrevious

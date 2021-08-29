@@ -5,7 +5,7 @@ import Search from "../../Search/Search";
 import ResultsList from "../../ResultsList/ResultsList";
 import User from "../../User/User";
 import ActivityView from "../../Activity/ActivityView";
-import NotFound from "../NotFound/NotFound";
+import NotFound from "../../Shared/NotFound/NotFound";
 
 // strongly type object for routes
 interface routePaths {
