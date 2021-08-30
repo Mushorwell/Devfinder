@@ -8,7 +8,7 @@ import { AppState } from "../../store/appState";
 import IUser, {IUserList} from "../../Interfaces/IUser";
 import ResultItem from "./ResultItem";
 import SearchBar from "../Search/SearchBar";
-import LoaderPage from "../Shared/LoaderPage";
+import LoaderView from "../LoaderView/LoaderView";
 import SearchSection from "../Search/SearchSection";
 
 const ResultsList = () => {
@@ -24,7 +24,7 @@ const ResultsList = () => {
             <SearchSection loading={loading} setFilteredUsers={setFilteredUsers} setLoading={setLoading} />
             <div className={styles.results}>
                 <div>
-                    {loading? <LoaderPage message='Finding GitHub Users...'/>: filteredUsers.length!==0?
+                    {loading? <LoaderView message='Finding GitHub Users...'/>: filteredUsers.length!==0?
                         filteredUsers.map((user: IUser, index: number) =>
                             <ResultItem
                                 key={index}

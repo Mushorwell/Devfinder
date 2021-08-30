@@ -4,7 +4,7 @@ import styles from './Loader.module.css';
 interface ILoaderPageProp{
     message: string
 }
-const LoaderPage: FunctionComponent<ILoaderPageProp> = ({message}: ILoaderPageProp) => {
+const LoaderView: FunctionComponent<ILoaderPageProp> = ({message}: ILoaderPageProp) => {
     return(
         <Fragment>
             <div className={styles.loaderPage}>
@@ -21,4 +21,4 @@ const LoaderPage: FunctionComponent<ILoaderPageProp> = ({message}: ILoaderPagePr
     )
 }
 
-export default LoaderPage;
+export default LoaderView;

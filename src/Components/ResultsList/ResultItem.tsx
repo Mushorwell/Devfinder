@@ -15,8 +15,8 @@ interface ResultItemProps{
     gitHubUrl: string;
 }
 const ResultItem: FunctionComponent<ResultItemProps> = (
-    props: PropsWithChildren<ResultItemProps>
-) => {
+        props: PropsWithChildren<ResultItemProps>
+    ) => {
 
     const history = useHistory();
 

@@ -4,6 +4,7 @@ import UserListReducer from "./userListReducer";
 import ActivityListReducer from "./activityListReducer";
 import ActivityReducer from "./activityReducer";
 import SearchReducer from "./searchReducer";
+import LoadReducer from "./loadReducer";
 
 export const rootReducer = combineReducers({
     user: UserReducer,
@@ -11,6 +12,7 @@ export const rootReducer = combineReducers({
     activities: ActivityListReducer,
     activity: ActivityReducer,
     search: SearchReducer,
+    loading: LoadReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

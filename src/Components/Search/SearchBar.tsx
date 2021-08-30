@@ -48,22 +48,26 @@ const SearchBar: FunctionComponent<ISearchBarProps> = (
         console.log('state updated');
     }, []);
 
+
+
     const executeSearch = useCallback(async (searchVal: string, pageNo: number = 1) => {
         setLoading(true);
         console.log('Loading...', loading);
         await searchUsers(searchVal, pageNo).then(
             result => {
-                storeDispatch({
-                    type:storeUserList,
-                    payload: result
-                });
-                storeDispatch({
-                    type: storeSearchString,
-                    payload: searchVal
-                });
-                setLoading(false);
-                console.log('Loading...', loading);
-                setFilteredUsers(result.loadedUsers);
+                if (result){
+                    storeDispatch({
+                        type:storeUserList,
+                        payload: result
+                    });
+                    storeDispatch({
+                        type: storeSearchString,
+                        payload: searchVal
+                    });
+                    setLoading(false);
+                    console.log('Loading...', loading);
+                    setFilteredUsers(result.loadedUsers);
+                }
             }
 
         );

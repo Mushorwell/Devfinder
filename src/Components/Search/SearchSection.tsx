@@ -1,7 +1,7 @@
 import React, {
     Dispatch,
     FunctionComponent,
-    SetStateAction,
+    SetStateAction, useEffect,
 } from 'react';
 import { Fragment } from 'react';
 import styles from "../ResultsList/ResultList.module.css";
@@ -18,6 +18,11 @@ interface ISearchSection{
 const SearchSection: FunctionComponent<ISearchSection> = (
     { setFilteredUsers, loading, setLoading }: ISearchSection
 ) => {
+
+    useEffect(() => {
+        console.log('Reset paginations', loading);
+    }, [loading, setFilteredUsers]);
+
     return (
         <Fragment>
             <div className={styles.search}>

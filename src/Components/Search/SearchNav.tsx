@@ -34,14 +34,6 @@ const actions: IActions ={
     SUB: 'subtract'
 }
 
-const initialState = {
-    secondPreviousPage: -1,
-    previousPage: 0,
-    currentPage: 1,
-    nextPage: 2,
-    secondNextPage: 3
-}
-
 interface ISearchNav{
     setFilteredUsers: Dispatch<SetStateAction<IUser[]>>;
     setLoading: Dispatch<SetStateAction<boolean>>;
@@ -50,7 +42,7 @@ interface ISearchNav{
 const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoading }: ISearchNav ) => {
 
     const increment = (maximum: number, state: IPaginationsState) => {
-        if (state.currentPage+1 <= maximum){
+        if (state.currentPage < maximum){
             return {
                 secondPreviousPage: state.currentPage-1,
                 previousPage: state.currentPage,
@@ -63,7 +55,7 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
     }
 
     const decrement = (state: IPaginationsState) => {
-        if (state.currentPage-1 >= 1){
+        if (state.currentPage > 1){
             return {
                 secondPreviousPage: state.currentPage-3,
                 previousPage: state.currentPage-2,
@@ -89,6 +81,16 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
     const storeDispatch = useDispatch();
     const searchVal: string = useSelector((state: AppState) => state.search);
     const totalPages: number = useSelector((state: AppState) => state.userList.totalPages);
+    const page: number = useSelector((state: AppState) => state.userList.currentPage);
+
+    const initialState = {
+        secondPreviousPage: page-2,
+        previousPage: page-1,
+        currentPage: page,
+        nextPage: page+1,
+        secondNextPage: page+2
+    }
+
     const [{
         secondPreviousPage,
         previousPage,
@@ -101,15 +103,17 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
         setLoading(true);
         await searchUsers(searchVal, pageNo).then(
             result => {
-                storeDispatch({
-                    type:storeUserList,
-                    payload: result
-                });
-                storeDispatch({
-                    type: storeSearchString,
-                    payload: searchVal
-                });
-                setFilteredUsers(result.loadedUsers);
+                if (result){
+                    storeDispatch({
+                        type:storeUserList,
+                        payload: result
+                    });
+                    storeDispatch({
+                        type: storeSearchString,
+                        payload: searchVal
+                    });
+                    setFilteredUsers(result.loadedUsers);
+                }
             }
         );
         setLoading(false);
@@ -130,6 +134,7 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
         dispatch({ type: actions.ADD });
         console.log('Moving forward to page:', currentPage+1);
         await executeSearch(searchVal, nextPage);
+        console.log('Total number of pages:', totalPages);
         console.log('Now on page:', currentPage);
     }
 
@@ -140,6 +145,18 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
                     className={['navigateResultsPage', 'navigationButton'].join(' ')}
                     onClick={handlePreviousPage}
                 ><BsChevronLeft /></button>
+                <div
+                    className={styles.pagination}
+                    style={(currentPage>1)&&(currentPage===totalPages)?{display:'flex'}: {display:'none'}}
+                >
+                    {secondPreviousPage-2}
+                </div>
+                <div
+                    className={styles.pagination}
+                    style={(currentPage>1)&&([totalPages,totalPages-1].includes(currentPage))?{display:'flex'}: {display:'none'}}
+                >
+                    {secondPreviousPage-1}
+                </div>
                 <div
                     className={styles.pagination}
                     style={(secondPreviousPage)<1?{display:'none'}: {display:'flex'}}
@@ -157,15 +174,27 @@ const SearchNav: FunctionComponent<ISearchNav> = ( { setFilteredUsers, setLoadin
                 </div>
                 <div
                     className={styles.pagination}
-                    style={(nextPage)>totalPages?{display:'none'}: {display:'flex'}}
+                    style={(nextPage>totalPages)?{display:'none'}: {display:'flex'}}
                 >
                     {nextPage}
                 </div>
                 <div
                     className={styles.pagination}
-                    style={(secondNextPage)>totalPages?{display:'none'}: {display:'flex'}}
+                    style={(secondNextPage>totalPages)?{display:'none'}: {display:'flex'}}
                 >
                     {secondNextPage}
+                </div>
+                <div
+                    className={styles.pagination}
+                    style={(currentPage<totalPages)&&([1,2].includes(currentPage))?{display:'flex'}: {display:'none'}}
+                >
+                    {secondNextPage+1}
+                </div>
+                <div
+                    className={styles.pagination}
+                    style={(currentPage<totalPages)&&(currentPage===1)?{display:'flex'}: {display:'none'}}
+                >
+                    {secondNextPage+2}
                 </div>
                 <button
                     className={['navigateResultsPage', 'navigationButton'].join(' ')}

@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect} from 'react';
+import React, {Fragment, useState, useEffect, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import {AppState} from "../../store/appState";
@@ -22,13 +22,27 @@ const User = () => {
         user => user.id === Number(id)
     ));
 
+    const [loading, setLoading] = useState<boolean>(true);
     const [profile] = useState<IUser | undefined>(user);
 
     const dispatch = useDispatch();
 
-    useEffect(()=> {
+    type ActionType = string;
+    type ActionPayload = Array<IActivity>;
+    const dispatchReduxAction = useCallback(
+        (
+            type: ActionType, payload: ActionPayload
+        ) => {
+            dispatch({
+                type:type,
+                payload: payload
+            });
+            console.log('Updating state using action:', type);
+        }, [dispatch]);
 
-        if (user){
+    const loadUserActivityData = () => {
+        console.log('Loading...', loading);
+        if (user) {
             dispatch({
                 type: saveUser,
                 payload: profile
@@ -36,8 +50,9 @@ const User = () => {
 
             searchRecentActivities(user.username).then(activities => {
 
-                switch (activities.length){
+                switch (activities.length) {
                     case 0:
+                        // setLoading(false);
                         break;
                     default:
                         const recentActions: Array<IActivity> = (activities.map(
@@ -49,15 +64,19 @@ const User = () => {
                                 date: activity.created_at
                             })
                         ));
-                        dispatch({
-                            type:storeUserActivities,
-                            payload: recentActions
-                        });
-                        console.log(activities.length);
+                        dispatchReduxAction(storeUserActivities, recentActions);
+                        setLoading(false);
+                        console.log('Loading...', loading);
                         break;
                 }
             });
         }
+    }
+
+    useEffect(()=> {
+
+        loadUserActivityData();
+
     });
     return(
         <Fragment>

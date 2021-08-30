@@ -25,20 +25,21 @@ export const searchUsers = (searchValue: string, page: number = 1) => {
     return makeAPICall(apiURL, searchParameters).then(
         users => {
             // Check the number of search results
-            // if (users.t)
-            if (users.total_count<10){
-                return {
-                    currentPage: page,
-                    totalPages: 1,
-                    loadedUsers: extractResponse(users.items)
-                };
-            } else {
-                return {
-                    currentPage: page,
-                    totalPages: Math.ceil(users.total_count/10),
-                    loadedUsers: extractResponse(users.items)
-                };
-            }
+            if (users){
+                if (users.total_count<10){
+                    return {
+                        currentPage: page,
+                        totalPages: 1,
+                        loadedUsers: extractResponse(users.items)
+                    };
+                } else {
+                    return {
+                        currentPage: page,
+                        totalPages: Math.ceil(users.total_count/10),
+                        loadedUsers: extractResponse(users.items)
+                    };
+                }
+            }else return undefined;
         }
     );
 };

@@ -1,5 +1,7 @@
 import urlParams from '../Interfaces/IUrlParameters';
 import { githubAPIBaseUrl, getApiUrl, makeAPICall } from "../api/apiMethods";
+import IUser from "../Interfaces/IUser";
+import IActivity from "../Interfaces/IActivity";
 
 // function to search for users from github, takes a string parameter
 export const searchRecentActivities = (username: string) => {
